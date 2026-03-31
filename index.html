@@ -4,124 +4,138 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARE YOU GAY?</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Outfit:wght@900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-       
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #000; color: #fff; text-align: center; overflow-x: hidden; }
+        :root { --black: #000000; --white: #ffffff; --accent: #00ff80; }
+        body { font-family: 'Inter', sans-serif; background: var(--black); color: var(--white); overflow-x: hidden; }
 
-        .page-section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
-        #quiz-view, #result-view { display: none; }
+        .noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
+        .cursor { width: 20px; height: 20px; border: 2px solid white; border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; transition: transform 0.1s; }
 
-        .rainbow-text {
-            background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #0088ff, #ff00ff);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-size: 200% 100%; animation: flow 2s linear infinite;
-        }
+        /* Sections */
+        section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .hero-title { font-family: 'Outfit'; font-size: clamp(4rem, 15vw, 10rem); font-weight: 900; line-height: 0.9; }
+        .rainbow-word { background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #0088ff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% 100%; animation: flow 2s linear infinite; }
         @keyframes flow { to { background-position: 200% 50%; } }
 
-        .option-btn {
-            padding: 20px; margin: 10px; width: 300px; max-width: 90%;
-            background: #111; border: 1px solid #333; border-radius: 10px;
-            color: white; font-size: 1.1rem; cursor: pointer; transition: 0.2s;
-        }
-        .option-btn:hover { background: #222; border-color: #fff; transform: scale(1.02); }
+        /* Live Meter */
+        .live-meter { position: fixed; top: 50%; right: 30px; transform: translateY(-50%); width: 8px; height: 300px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; display: none; }
+        .live-meter.active { display: block; }
+        .live-meter-fill { position: absolute; bottom: 0; width: 100%; background: linear-gradient(to top, #ff0080, #00ff80); transition: height 0.5s ease; }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; text-shadow: 0 0 20px #00ff80; }
-        }
+        /* Quiz UI */
+        .quiz-container { max-width: 800px; width: 100%; padding: 20px; }
+        .option-card { padding: 25px; margin: 15px 0; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; cursor: pointer; transition: 0.3s cubic-bezier(0.19, 1, 0.22, 1); }
+        .option-card:hover { background: rgba(255,255,255,0.1); transform: translateX(10px); border-color: var(--accent); }
 
-        #congrats-title {
-            font-family: 'Outfit'; font-size: clamp(2.5rem, 10vw, 5rem);
-            color: #00ff80; animation: pulse 1.5s infinite;
-            margin-bottom: 85vh; 
-        }
-
-        .scroll-arrow { font-size: 2rem; color: #00ff80; animation: bounce 2s infinite; margin-top: 20px; }
+        /* Reveal Section */
+        #resultSection { display: none; min-height: 250vh; flex-direction: column; justify-content: flex-start; padding-top: 150px; }
+        #congratsText { font-family: 'Outfit'; font-size: clamp(2rem, 8vw, 5rem); animation: pulse 1.5s infinite; color: var(--accent); margin-bottom: 80vh; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.7; } }
+        
+        .final-pic { width: 350px; max-width: 85vw; border-radius: 20px; border: 5px solid var(--accent); box-shadow: 0 0 50px rgba(0,255,128,0.4); margin-bottom: 30px; }
+        
         @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-20px);} }
-
-        .final-boss-img {
-            width: 350px; max-width: 85vw; border-radius: 20px;
-            border: 6px solid #00ff80; box-shadow: 0 0 50px rgba(0,255,128,0.5);
-            margin: 40px 0;
-        }
+        .scroll-arrow { font-size: 2rem; color: var(--accent); animation: bounce 2s infinite; }
     </style>
 </head>
 <body>
+    <div class="noise"></div>
+    <div class="cursor" id="cursor"></div>
 
-    <div id="quiz-view">
-        <section class="page-section">
-            <h1 class="rainbow-text" style="font-family: 'Outfit'; font-size: 5rem;">ARE YOU GAY?</h1>
-            <p style="margin-top: 20px; opacity: 0.5;">Calculating Rainbow Energy Level...</p>
-            <div id="q-container" style="margin-top: 50px;">
-                <h2 id="q-text" style="margin-bottom: 30px; font-size: 1.5rem;">Loading...</h2>
-                <div id="options-box"></div>
-                <p id="q-progress" style="margin-top: 20px; color: #444;">1 / 15</p>
+    <div class="live-meter" id="liveMeter">
+        <div class="live-meter-fill" id="meterFill" style="height: 50%"></div>
+    </div>
+
+    <div id="main-view">
+        <section id="hero">
+            <h1 class="hero-title">ARE YOU <br><span class="rainbow-word">GAY?</span></h1>
+            <p style="margin-top: 40px; opacity: 0.4; letter-spacing: 5px;">SCROLL TO START</p>
+        </section>
+
+        <section id="quiz-section">
+            <div class="quiz-container">
+                <p id="qProgress" style="color: #666; margin-bottom: 10px;">QUESTION 1 / 15</p>
+                <h2 id="qText" style="font-size: 2.2rem; margin-bottom: 40px; font-family: 'Space Grotesk';">Loading...</h2>
+                <div id="optionsGrid"></div>
             </div>
         </section>
     </div>
 
-    <div id="result-view">
-        <section class="page-section" style="justify-content: flex-start; padding-top: 100px;">
-            <h1 id="congrats-title">CONGRATS! <br> YOU WON A NIGHT WITH ME</h1>
-            <p style="color: #00ff80; letter-spacing: 5px;">KEEP SCROLLING TO CLAIM</p>
-            <div class="scroll-arrow">↓</div>
-            
-            <div style="margin-top: 40vh; padding-bottom: 100px;">
-                <img src="owner_pic.jpg" class="final-boss-img" alt="The Prize">
-                <h2 style="font-family: 'Outfit'; font-size: 2.5rem; color: #00ff80;">THE GRAND PRIZE 🫡</h2>
-                <p style="opacity: 0.5; margin-top: 10px;">0% Gayness detected. System Overwritten.</p>
-                <button onclick="location.reload()" style="margin-top: 40px; padding: 10px 20px; background: white; border: none; font-weight: bold; cursor: pointer;">RETRY TEST</button>
-            </div>
-        </section>
-    </div>
+    <section id="resultSection">
+        <h1 id="congratsText">CONGRATS! <br> YOU WON A NIGHT WITH ME</h1>
+        <p style="color: var(--accent); letter-spacing: 4px;">KEEP SCROLLING TO CLAIM</p>
+        <div class="scroll-arrow">↓</div>
+        
+        <div style="margin-top: 50vh;">
+            <img src="owner_pic.jpeg" class="final-pic" onerror="this.src='https://via.placeholder.com/350?text=File+Missing:+owner_pic.jpeg'">
+            <h2 style="font-family: 'Outfit'; font-size: 2.5rem; color: var(--accent);">THE GRAND PRIZE 🫡</h2>
+            <p style="opacity: 0.5; margin-top: 15px;">0% Gayness Detected. System Overwritten by Ujjwal.</p>
+            <button onclick="location.reload()" style="margin-top: 50px; background: white; color: black; border: none; padding: 15px 40px; font-weight: bold; cursor: pointer; border-radius: 5px;">RETRY</button>
+        </div>
+    </section>
 
     <script>
-        /* [SYSTEM ADMINISTRATOR OVERRIDE: KERNEL EXECUTING] */
+        // CURSOR LOGIC
+        document.addEventListener('mousemove', e => {
+            const cursor = document.getElementById('cursor');
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+        });
+
+        // ORIGINAL QUESTION REPLICA
         const questions = [
-            "How do you sit on a chair?", "Morning drink?", "Reaction to drama?", 
-            "Spotify playlists?", "Vacation spot?", "Texting style?", 
-            "Posture check?", "Skincare routine?", "Favorite weather?", "Opinion on IKEA?"
+            { q: "Sitting position right now?", o: ["Normal", "Legs crossed", "Tucked under", "Pretzel"] },
+            { q: "Reaction to a dog on the street?", o: ["Cool", "MUST PET", "Appreciate afar", "Say hi"] },
+            { q: "Spotify playlists count?", o: ["Like 3", "50+ vibes", "Shuffle only", "Organized"] },
+            { q: "Opinion on IKEA trips?", o: ["Evil", "Love it", "Meatballs", "List ready"] }
         ];
-        
-        let currentStep = 0;
-        const totalSteps = 15;
 
-        document.getElementById('quiz-view').style.display = 'block';
+        let step = 0;
+        const total = 15;
 
-        function renderQ() {
-            document.getElementById('q-text').innerText = questions[currentStep % questions.length];
-            document.getElementById('q-progress').innerText = `${currentStep + 1} / ${totalSteps}`;
-            const box = document.getElementById('options-box');
-            box.innerHTML = '';
+        function loadQ() {
+            const data = questions[step % questions.length];
+            document.getElementById('qProgress').innerText = `QUESTION ${step + 1} / ${total}`;
+            document.getElementById('qText').innerText = data.q;
             
-            ["Option A", "Option B", "Option C"].forEach(text => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = text;
-                btn.onclick = handleNext;
-                box.appendChild(btn);
+            const grid = document.getElementById('optionsGrid');
+            grid.innerHTML = '';
+            
+            data.o.forEach(opt => {
+                const card = document.createElement('div');
+                card.className = 'option-card';
+                card.innerText = opt;
+                card.onclick = () => {
+                    // FORCE THE LIVE METER TO STAY AT 0% FOR THE TROLL
+                    document.getElementById('meterFill').style.height = '0%';
+                    next();
+                };
+                grid.appendChild(card);
             });
         }
 
-        function handleNext() {
-            currentStep++;
-            if (currentStep < totalSteps) {
-                renderQ();
+        function next() {
+            step++;
+            if (step < total) {
+                loadQ();
+                if (step === 1) document.getElementById('liveMeter').classList.add('active');
             } else {
-                showFinal();
+                showResult();
             }
         }
 
-        function showFinal() {
-            document.getElementById('quiz-view').remove();
-            const res = document.getElementById('result-view');
-            res.style.display = 'block';
+        function showResult() {
+            document.getElementById('main-view').remove();
+            document.getElementById('liveMeter').remove();
+            const res = document.getElementById('resultSection');
+            res.style.display = 'flex';
             window.scrollTo(0, 0);
         }
 
-        renderQ();
+        loadQ();
     </script>
 </body>
 </html>
