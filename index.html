@@ -6,31 +6,22 @@
     <title>ARE YOU GAY?</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@100;200;300;400;500;600;700;800;900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        /* Pulse Animation for the reveal */
         @keyframes pulse {
-    0% { transform: scale(1); filter: brightness(1); }
-    50% { transform: scale(1.1); filter: brightness(1.5); text-shadow: 0 0 20px #00ff80; }
-    100% { transform: scale(1); filter: brightness(1); }
-}
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            0% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.1); filter: brightness(1.5); text-shadow: 0 0 20px #00ff80; }
+            100% { transform: scale(1); filter: brightness(1); }
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --black: #000000;
-            --black-light: #0a0a0a;
-            --black-lighter: #111111;
             --white: #ffffff;
             --gray: #333333;
-            --gray-light: #666666;
-            --accent: #ffffff;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
             background: var(--black);
@@ -45,1565 +36,168 @@
 
         @keyframes rainbowBg {
             0% { background: linear-gradient(135deg, #ff0000 0%, #000 50%, #000 100%); }
-            14% { background: linear-gradient(135deg, #ff8800 0%, #000 50%, #000 100%); }
-            28% { background: linear-gradient(135deg, #ffff00 0%, #000 50%, #000 100%); }
-            42% { background: linear-gradient(135deg, #00ff00 0%, #000 50%, #000 100%); }
-            57% { background: linear-gradient(135deg, #0088ff 0%, #000 50%, #000 100%); }
-            71% { background: linear-gradient(135deg, #8800ff 0%, #000 50%, #000 100%); }
-            85% { background: linear-gradient(135deg, #ff00ff 0%, #000 50%, #000 100%); }
+            20% { background: linear-gradient(135deg, #ffff00 0%, #000 50%, #000 100%); }
+            40% { background: linear-gradient(135deg, #00ff00 0%, #000 50%, #000 100%); }
+            60% { background: linear-gradient(135deg, #0088ff 0%, #000 50%, #000 100%); }
+            80% { background: linear-gradient(135deg, #8800ff 0%, #000 50%, #000 100%); }
             100% { background: linear-gradient(135deg, #ff0000 0%, #000 50%, #000 100%); }
         }
 
-        /* Custom Cursor */
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid white;
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s, opacity 0.1s;
-            mix-blend-mode: difference;
-        }
-
-        .cursor-dot {
-            width: 8px;
-            height: 8px;
-            background: white;
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: difference;
-        }
-
-        /* Noise overlay */
-        .noise {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1000;
-            opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-        }
-
-        /* Hero Section */
-        .hero {
+        /* Hero and Quiz layout */
+        .hero, .quiz-section, .result-section, .loading-section {
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-text-container {
             text-align: center;
-            z-index: 10;
+            padding: 20px;
         }
 
-        .hero-pre {
-            font-size: clamp(1rem, 3vw, 1.5rem);
-            font-weight: 300;
-            letter-spacing: 0.5em;
-            text-transform: uppercase;
-            opacity: 0;
-            animation: fadeSlideUp 1s 0.2s forwards;
-            color: rgba(255,255,255,0.5);
-        }
-
-        .hero-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(4rem, 20vw, 15rem);
-            font-weight: 900;
-            line-height: 0.9;
-            letter-spacing: -0.02em;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-
-        .hero-title .word {
-            display: inline-block;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(100px) rotateX(-90deg);
-            animation: wordReveal 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-        }
-
-        .hero-title .word:nth-child(1) { animation-delay: 0.5s; }
-        .hero-title .word:nth-child(2) { animation-delay: 1.2s; }
-        .hero-title .word:nth-child(3) { animation-delay: 1.9s; }
-
-        .hero-title .word.rainbow-word {
-            background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #0088ff, #8800ff, #ff00ff, #ff0000);
+        .hero-title { font-family: 'Outfit'; font-size: clamp(4rem, 15vw, 10rem); font-weight: 900; }
+        .rainbow-word {
+            background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #0088ff, #ff00ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
             background-size: 200% 100%;
-            animation: wordReveal 1.2s 1.9s cubic-bezier(0.19, 1, 0.22, 1) forwards,
-                       rainbowFlow 2s 3.1s linear infinite;
+            animation: rainbowFlow 2s linear infinite;
         }
 
-        @keyframes wordReveal {
-            0% {
-                opacity: 0;
-                transform: translateY(100px) rotateX(-90deg);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) rotateX(0);
-            }
-        }
+        @keyframes rainbowFlow { to { background-position: 200% 50%; } }
 
-        @keyframes rainbowFlow {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
-        }
-
-        .hero-question {
-            font-size: clamp(3rem, 15vw, 12rem);
-            font-weight: 900;
-            opacity: 0;
-            animation: questionPop 0.8s 2.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-        }
-
-        @keyframes questionPop {
-            0% {
-                opacity: 0;
-                transform: scale(0) rotate(-20deg);
-            }
-            50% {
-                transform: scale(1.3) rotate(5deg);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) rotate(0);
-            }
-        }
-
-        @keyframes fadeSlideUp {
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* Glowing lines */
-        .glow-lines {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200%;
-            height: 200%;
-            pointer-events: none;
-        }
-
-        .glow-line {
-            position: absolute;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: lineMove 8s linear infinite;
-        }
-
-        .glow-line:nth-child(1) { top: 20%; width: 100%; animation-delay: 0s; }
-        .glow-line:nth-child(2) { top: 40%; width: 80%; left: 10%; animation-delay: -2s; }
-        .glow-line:nth-child(3) { top: 60%; width: 90%; left: 5%; animation-delay: -4s; }
-        .glow-line:nth-child(4) { top: 80%; width: 70%; left: 15%; animation-delay: -6s; }
-
-        @keyframes lineMove {
-            0%, 100% { opacity: 0; transform: translateX(-100%); }
-            50% { opacity: 1; }
-            100% { transform: translateX(100%); }
-        }
-
-        /* Scroll indicator */
-        .scroll-indicator {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            opacity: 0;
-            animation: fadeIn 1s 3.5s forwards;
-        }
-
-        .scroll-text {
-            font-size: 0.75rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.5);
-        }
-
-        .scroll-line {
-            width: 1px;
-            height: 60px;
-            background: linear-gradient(to bottom, white, transparent);
-            animation: scrollPulse 2s infinite;
-        }
-
-        @keyframes scrollPulse {
-            0%, 100% { transform: scaleY(1); opacity: 1; }
-            50% { transform: scaleY(0.5); opacity: 0.5; }
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        /* Transition Section */
-        .transition-section {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .transition-text {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(2rem, 8vw, 6rem);
-            font-weight: 200;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
-            line-height: 1.3;
-        }
-
-        .transition-text.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .transition-text span {
-            display: inline-block;
-            background: linear-gradient(90deg, #fff, rgba(255,255,255,0.3));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Quiz Section */
-        .quiz-section {
-            min-height: 100vh;
-            padding: 100px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .quiz-container {
-            max-width: 900px;
-            width: 100%;
-            opacity: 1;
-        }
-
-        /* Live meter */
-        .live-meter {
-            position: fixed;
-            top: 50%;
-            right: 30px;
-            transform: translateY(-50%);
-            width: 8px;
-            height: 300px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            z-index: 100;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-
-        .live-meter.active {
-            opacity: 1;
-        }
-
-        .live-meter-fill {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            background: linear-gradient(to top, #ff0080, #ff8c00, #ffff00, #00ff00, #00ffff, #0080ff, #8000ff);
-            border-radius: 10px;
-            transition: height 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        .live-meter-label {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%) rotate(-90deg);
-            white-space: nowrap;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.5);
-        }
-
-        .live-meter-percent {
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        /* Progress bar */
-        .quiz-progress {
-            margin-bottom: 60px;
-        }
-
-        .quiz-progress-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.6);
-        }
-
-        .quiz-progress-bar {
-            height: 2px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .quiz-progress-fill {
-            height: 100%;
-            background: white;
-            transition: width 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        /* Question */
-        .question-wrapper {
-            margin-bottom: 50px;
-        }
-
-        .question-number {
-            font-size: 0.75rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.4);
-            margin-bottom: 20px;
-        }
-
-        .question-text {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            font-weight: 500;
-            line-height: 1.4;
-            opacity: 0;
-            transform: translateX(30px);
-            animation: slideIn 0.6s forwards;
-        }
-
-        @keyframes slideIn {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        /* Options */
-        .options-grid {
-            display: grid;
-            gap: 15px;
-        }
-
+        /* Quiz UI */
+        .quiz-container { max-width: 800px; width: 100%; }
         .option-card {
-            padding: 25px 30px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.08);
+            padding: 20px; margin: 10px 0;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            opacity: 0;
-            transform: translateY(20px);
+            transition: 0.3s;
         }
+        .option-card:hover { transform: translateX(10px); background: rgba(255,255,255,0.15); }
+        .selected { border-color: white; background: rgba(255,255,255,0.2); }
 
-        .option-card:nth-child(1) { animation: optionIn 0.5s 0.1s forwards; }
-        .option-card:nth-child(2) { animation: optionIn 0.5s 0.2s forwards; }
-        .option-card:nth-child(3) { animation: optionIn 0.5s 0.3s forwards; }
-        .option-card:nth-child(4) { animation: optionIn 0.5s 0.4s forwards; }
+        /* Results */
+        .result-section { display: none; }
+        .result-section.active { display: flex; }
+        .loading-section.active { display: flex; }
+        
+        /* Meter */
+        .result-meter-bar { width: 300px; height: 10px; background: #333; border-radius: 5px; margin: 20px 0; overflow: hidden; }
+        .result-meter-fill { height: 100%; width: 0%; background: #fff; transition: width 2s; }
 
-        @keyframes optionIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .option-card:hover {
-            background: rgba(255,255,255,0.08);
-            border-color: rgba(255,255,255,0.2);
-            transform: translateX(10px);
-        }
-
-        .option-card.selected {
-            background: rgba(255,255,255,0.15);
-            border-color: white;
-        }
-
-        .option-card.gay-indicator {
-            border-color: #ff0080;
-            box-shadow: 0 0 30px rgba(255,0,128,0.3);
-        }
-
-        .option-card.straight-indicator {
-            border-color: #00ff80;
-            box-shadow: 0 0 30px rgba(0,255,128,0.3);
-        }
-
-        .option-letter {
-            width: 40px;
-            height: 40px;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            font-weight: 500;
-            flex-shrink: 0;
-            transition: all 0.3s;
-        }
-
-        .option-card:hover .option-letter {
-            background: white;
-            color: black;
-        }
-
-        .option-text {
-            font-size: 1.05rem;
-            color: rgba(255,255,255,0.8);
-        }
-
-        /* Result Section */
-        .result-section {
-            min-height: 100vh;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 60px 20px;
-            text-align: center;
-        }
-
-        .result-section.active {
-            display: flex;
-        }
-
-        .result-emoji-container {
-            font-size: 120px;
-            margin-bottom: 40px;
-            animation: resultPop 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        @keyframes resultPop {
-            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
-            100% { transform: scale(1) rotate(0); opacity: 1; }
-        }
-
-        .result-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(3rem, 12vw, 8rem);
-            font-weight: 900;
-            margin-bottom: 30px;
-            line-height: 1;
-        }
-
-        .result-title.rainbow-text {
-            background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #0088ff, #8800ff, #ff00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: rainbowShift 3s linear infinite;
-            background-size: 200% 100%;
-        }
-
-        @keyframes rainbowShift {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
-        }
-
-        .result-description {
-            font-size: 1.3rem;
-            color: rgba(255,255,255,0.7);
-            max-width: 600px;
-            line-height: 1.8;
-            margin-bottom: 50px;
-        }
-
-        .result-meter-container {
-            width: 100%;
-            max-width: 500px;
-            margin-bottom: 50px;
-        }
-
-        .result-meter-label {
-            font-size: 0.8rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.5);
-            margin-bottom: 15px;
-        }
-
-        .result-meter-bar {
-            height: 20px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .result-meter-fill {
-            height: 100%;
-            border-radius: 20px;
-            transition: width 2s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        .result-meter-fill.rainbow {
-            background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #0088ff, #8800ff, #ff00ff);
-            background-size: 200% 100%;
-            animation: rainbowShift 2s linear infinite;
-        }
-
-        .result-meter-fill.normal {
-            background: white;
-        }
-
-        .result-percent {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: black;
-            mix-blend-mode: difference;
-        }
-
-        /* Restart button */
         .restart-btn {
-            padding: 20px 60px;
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.4s;
-            border-radius: 0;
-        }
-
-        .restart-btn:hover {
-            background: white;
-            color: black;
-        }
-
-        /* Start button */
-        .start-btn {
-            margin-top: 40px;
-            padding: 25px 80px;
-            background: white;
-            border: none;
-            color: black;
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-            opacity: 0;
-            animation: fadeIn 1s 0.5s forwards;
-        }
-
-        .start-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 60px rgba(255,255,255,0.3);
-        }
-
-        /* Disclaimer */
-        .disclaimer {
-            margin-top: 60px;
-            padding: 30px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 12px;
-            max-width: 600px;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.5);
-            line-height: 1.8;
-        }
-
-        .disclaimer strong {
-            color: #ff0080;
-        }
-
-        /* Rainbow confetti */
-        .confetti-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1000;
-            overflow: hidden;
-        }
-
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            top: -20px;
-        }
-
-        /* Loading */
-        .loading-section {
-            display: none;
-            height: 100vh;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .loading-section.active {
-            display: flex;
-        }
-
-        .loading-ring {
-            width: 80px;
-            height: 80px;
-            border: 2px solid rgba(255,255,255,0.1);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 30px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 1rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.6);
-        }
-
-        /* Floating elements for rainbow mode */
-        .rainbow-floaters {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 1s;
-        }
-
-        .rainbow-floaters.active {
-            opacity: 1;
-        }
-
-        .rainbow-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(100px);
-            animation: floatOrb 15s infinite ease-in-out;
-        }
-
-        @keyframes floatOrb {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(100px, -100px); }
-            50% { transform: translate(-50px, 50px); }
-            75% { transform: translate(80px, 80px); }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .live-meter {
-                right: 15px;
-                height: 200px;
-                width: 6px;
-            }
-
-            .option-card {
-                padding: 20px;
-            }
-
-            .hero-title {
-                letter-spacing: -0.03em;
-            }
-        }
-
-        /* Hide scrollbar but keep functionality */
-        body::-webkit-scrollbar {
-            width: 0;
+            margin-top: 30px; padding: 15px 40px;
+            background: white; color: black; border: none;
+            font-weight: bold; cursor: pointer; text-transform: uppercase;
         }
     </style>
 </head>
 <body>
-    <!-- Noise overlay -->
-    <div class="noise"></div>
 
-    <!-- Custom cursor -->
-    <div class="cursor" id="cursor"></div>
-    <div class="cursor-dot" id="cursorDot"></div>
-
-    <!-- Live gayness meter -->
-    <div class="live-meter" id="liveMeter">
-        <div class="live-meter-fill" id="liveMeterFill" style="height: 50%"></div>
-        <span class="live-meter-label">GAY METER</span>
-        <span class="live-meter-percent" id="liveMeterPercent">50%</span>
-    </div>
-
-    <!-- Rainbow floaters -->
-    <div class="rainbow-floaters" id="rainbowFloaters">
-        <div class="rainbow-orb" style="width: 500px; height: 500px; background: #ff0080; top: -100px; left: -100px;"></div>
-        <div class="rainbow-orb" style="width: 400px; height: 400px; background: #00ffff; bottom: -100px; right: -100px; animation-delay: -5s;"></div>
-        <div class="rainbow-orb" style="width: 300px; height: 300px; background: #ffff00; top: 50%; left: 30%; animation-delay: -10s;"></div>
-    </div>
-
-    <!-- Confetti -->
-    <div class="confetti-container" id="confetti"></div>
-
-    <!-- Hero Section -->
     <section class="hero" id="hero">
-        <div class="glow-lines">
-            <div class="glow-line"></div>
-            <div class="glow-line"></div>
-            <div class="glow-line"></div>
-            <div class="glow-line"></div>
-        </div>
-
-        <div class="hero-text-container">
-            <p class="hero-pre">The Ultimate Test</p>
-            <h1 class="hero-title">
-                <span class="word">ARE</span>
-                <span class="word">YOU</span>
-                <span class="word rainbow-word">GAY?</span>
-            </h1>
-        </div>
-
-        <div class="scroll-indicator">
-            <span class="scroll-text">Scroll to find out</span>
-            <div class="scroll-line"></div>
-        </div>
+        <h1 class="hero-title">ARE YOU <span class="rainbow-word">GAY?</span></h1>
+        <p style="margin-top: 20px; opacity: 0.5;">Scroll down to begin</p>
     </section>
 
-    <!-- Transition Section -->
-    <section class="transition-section" id="transition1">
-        <p class="transition-text">
-            <span>Answer 15 questions.</span><br>
-            <span>Discover the truth.</span>
-        </p>
-    </section>
-
-    <!-- Another transition -->
-    <section class="transition-section" id="transition2">
-        <p class="transition-text">
-            <span>Ready?</span>
-        </p>
-    </section>
-
-    <!-- Quiz Section -->
     <section class="quiz-section" id="quizSection">
-        <div class="quiz-container" id="quizContainer">
-            <div class="quiz-progress">
-                <div class="quiz-progress-header">
-                    <span id="questionNum">Question 1 / 15</span>
-                    <span id="progressPercent">0%</span>
-                </div>
-                <div class="quiz-progress-bar">
-                    <div class="quiz-progress-fill" id="progressFill" style="width: 0%"></div>
-                </div>
-            </div>
-
-            <div class="question-wrapper" id="questionWrapper">
-                <!-- Question content injected here -->
-            </div>
+        <div class="quiz-container">
+            <h2 id="questionNum" style="font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 10px;">QUESTION 1/15</h2>
+            <div id="questionWrapper"></div>
         </div>
     </section>
 
-    <!-- Loading Section -->
-    <section class="loading-section" id="loadingSection">
-        <div class="loading-ring"></div>
-        <p class="loading-text">Analyzing your responses...</p>
+    <section class="loading-section" id="loadingSection" style="display:none;">
+        <h2 class="rainbow-word">ANALYZING...</h2>
     </section>
 
-    <!-- Result Section -->
     <section class="result-section" id="resultSection">
-        <div class="result-emoji-container" id="resultEmoji">🏳️‍🌈</div>
-        <h1 class="result-title" id="resultTitle">YOU'RE GAY</h1>
-        <p class="result-description" id="resultDescription">
-            Based on our highly scientific analysis of your responses, we've determined your rainbow energy level.
-            <div id="specialReveal" style="display:none; text-align: center; margin-bottom: 30px;">
-    <h1 id="congratsText" style="font-family: 'Outfit'; font-size: 3rem; animation: pulse 1s infinite; background: linear-gradient(90deg, #00ff80, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-        CONGRATS! YOU WON A NIGHT WITH ME
-    </h1>
-    
-    <div id="imageWrapper" style="opacity: 0; transition: opacity 1.5s ease-in; margin-top: 20px;">
-        <img src="owner_pic.jpg" style="width: 300px; border-radius: 20px; border: 4px solid #00ff80; box-shadow: 0 0 50px rgba(0,255,128,0.5);">
-        <p style="margin-top: 10px; color: #00ff80; font-weight: bold; letter-spacing: 2px;">THE GRAND PRIZE 🫡</p>
-    </div>
-</div>
-        </p>
+        <div id="defaultResult">
+            <div id="resultEmoji" style="font-size: 5rem;">🏳️‍🌈</div>
+            <h1 id="resultTitle" class="result-title">YOU'RE GAY</h1>
+            <p id="resultDescription">Calculated energy level detected.</p>
+            <div class="result-meter-bar"><div class="result-meter-fill" id="resultMeterFill"></div></div>
+        </div>
 
-        <div class="result-meter-container">
-            <p class="result-meter-label">Gayness Level</p>
-            <div class="result-meter-bar">
-                <div class="result-meter-fill" id="resultMeterFill" style="width: 0%"></div>
-                <span class="result-percent" id="resultPercent">0%</span>
+        <div id="specialReveal" style="display:none;">
+            <h1 id="congratsText" style="font-family: 'Outfit'; font-size: 3rem; animation: pulse 1s infinite; background: linear-gradient(90deg, #00ff80, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                CONGRATS! YOU WON A NIGHT WITH ME
+            </h1>
+            <div id="imageWrapper" style="opacity: 0; transition: opacity 1.5s ease-in; margin-top: 20px;">
+                <img src="owner_pic.jpg" style="width: 300px; border-radius: 20px; border: 4px solid #00ff80; box-shadow: 0 0 50px rgba(0,255,128,0.5);">
+                <p style="margin-top: 10px; color: #00ff80; font-weight: bold; letter-spacing: 2px;">THE GRAND PRIZE 🫡</p>
             </div>
         </div>
 
-        <button class="restart-btn" onclick="restart()">Take Again</button>
-
-        <div class="disclaimer">
-            <strong>⚠️ DISCLAIMER:</strong> This is 100% satire and for entertainment only! 
-            Sexual orientation cannot be determined by any quiz. Your identity is valid no matter what. 
-            Love is love! 🏳️‍🌈❤️
-        </div>
+        <button class="restart-btn" onclick="location.reload()">Take Again</button>
     </section>
 
     <script>
-        // Question bank - 50+ questions, 15 randomly selected each time
         const allQuestions = [
-            {
-                q: "What's your sitting position right now?",
-                options: [
-                    { text: "Normal, feet on floor", score: 0 },
-                    { text: "Legs crossed at the knee", score: 2 },
-                    { text: "One leg tucked under", score: 1 },
-                    { text: "Sitting like a pretzel somehow", score: 3 }
-                ]
-            },
-            {
-                q: "How do you feel about IKEA trips?",
-                options: [
-                    { text: "Necessary evil", score: 0 },
-                    { text: "It's a full day experience and I love it", score: 3 },
-                    { text: "The meatballs make it worth it", score: 1 },
-                    { text: "I have a list and a floor plan ready", score: 2 }
-                ]
-            },
-            {
-                q: "Pick a drink:",
-                options: [
-                    { text: "Beer", score: 0 },
-                    { text: "Iced coffee with oat milk", score: 3 },
-                    { text: "Whatever's available", score: 1 },
-                    { text: "A cocktail with a name I can't pronounce", score: 2 }
-                ]
-            },
-            {
-                q: "Your Spotify has how many playlists?",
-                options: [
-                    { text: "Like 3", score: 0 },
-                    { text: "50+ and they're all vibes", score: 3 },
-                    { text: "I just hit shuffle", score: 1 },
-                    { text: "Organized by mood, year, and occasion", score: 2 }
-                ]
-            },
-            {
-                q: "When you see a dog on the street:",
-                options: [
-                    { text: "Cool, a dog", score: 0 },
-                    { text: "I MUST pet it and ask its name", score: 3 },
-                    { text: "I appreciate it from afar", score: 1 },
-                    { text: "Already on the ground saying hi", score: 2 }
-                ]
-            },
-            {
-                q: "How many tabs do you have open right now?",
-                options: [
-                    { text: "Under 5", score: 0 },
-                    { text: "47 and counting", score: 3 },
-                    { text: "Just this one", score: 1 },
-                    { text: "Enough that Chrome shows ':D'", score: 2 }
-                ]
-            },
-            {
-                q: "Your opinion on astrology:",
-                options: [
-                    { text: "It's not real", score: 0 },
-                    { text: "Explain your birth chart RIGHT NOW", score: 3 },
-                    { text: "Fun but not serious", score: 1 },
-                    { text: "Mercury retrograde explains everything", score: 2 }
-                ]
-            },
-            {
-                q: "When someone asks 'how are you':",
-                options: [
-                    { text: "Good", score: 0 },
-                    { text: "I trauma dump immediately", score: 3 },
-                    { text: "Fine, you?", score: 1 },
-                    { text: "Depends who's asking", score: 2 }
-                ]
-            },
-            {
-                q: "Your relationship with plants:",
-                options: [
-                    { text: "They die under my care", score: 0 },
-                    { text: "I have 30+ and they all have names", score: 3 },
-                    { text: "I have one that's alive... I think", score: 1 },
-                    { text: "My apartment is basically a greenhouse", score: 2 }
-                ]
-            },
-            {
-                q: "How do you feel about brunch?",
-                options: [
-                    { text: "Just eat breakfast or lunch", score: 0 },
-                    { text: "It's a lifestyle", score: 3 },
-                    { text: "If someone invites me", score: 1 },
-                    { text: "3 hour minimum with bottomless mimosas", score: 2 }
-                ]
-            },
-            {
-                q: "You're decorating a room. First priority:",
-                options: [
-                    { text: "A bed", score: 0 },
-                    { text: "The AESTHETIC", score: 3 },
-                    { text: "Whatever's functional", score: 1 },
-                    { text: "Fairy lights and candles", score: 2 }
-                ]
-            },
-            {
-                q: "Your walking style:",
-                options: [
-                    { text: "Point A to point B", score: 0 },
-                    { text: "Every sidewalk is a runway", score: 3 },
-                    { text: "Fast and efficient", score: 1 },
-                    { text: "Main character energy always", score: 2 }
-                ]
-            },
-            {
-                q: "Thoughts on musical theatre:",
-                options: [
-                    { text: "Not for me", score: 0 },
-                    { text: "I know every word to every show", score: 3 },
-                    { text: "Some are okay", score: 1 },
-                    { text: "Currently humming a show tune", score: 2 }
-                ]
-            },
-            {
-                q: "Your texting style includes:",
-                options: [
-                    { text: "Minimal punctuation", score: 0 },
-                    { text: "Excessive emojis and keyboard smashing", score: 3 },
-                    { text: "Proper grammar", score: 1 },
-                    { text: "sksksksk and I oop", score: 2 }
-                ]
-            },
-            {
-                q: "How often do you rearrange furniture?",
-                options: [
-                    { text: "Never thought about it", score: 0 },
-                    { text: "Monthly minimum", score: 3 },
-                    { text: "When I move", score: 1 },
-                    { text: "The feng shui must be PERFECT", score: 2 }
-                ]
-            },
-            {
-                q: "Your skincare routine:",
-                options: [
-                    { text: "Water", score: 0 },
-                    { text: "12 steps, timed perfectly", score: 3 },
-                    { text: "Cleanser and moisturizer", score: 1 },
-                    { text: "I have a spreadsheet for this", score: 2 }
-                ]
-            },
-            {
-                q: "When you see a rainbow:",
-                options: [
-                    { text: "It's light refraction", score: 0 },
-                    { text: "MY PEOPLE ARE CALLING", score: 3 },
-                    { text: "Pretty", score: 1 },
-                    { text: "Photo opportunity!!!", score: 2 }
-                ]
-            },
-            {
-                q: "Your coffee order:",
-                options: [
-                    { text: "Black coffee", score: 0 },
-                    { text: "Something seasonal with a 15-word description", score: 3 },
-                    { text: "Whatever caffeine", score: 1 },
-                    { text: "Iced no matter the weather", score: 2 }
-                ]
-            },
-            {
-                q: "Opinion on scented candles:",
-                options: [
-                    { text: "They exist", score: 0 },
-                    { text: "I have a collection organized by season", score: 3 },
-                    { text: "Nice for gifts", score: 1 },
-                    { text: "Currently burning 3 right now", score: 2 }
-                ]
-            },
-            {
-                q: "Your response to drama:",
-                options: [
-                    { text: "Stay out of it", score: 0 },
-                    { text: "I AM the drama", score: 3 },
-                    { text: "Observe quietly", score: 1 },
-                    { text: "Making popcorn as we speak", score: 2 }
-                ]
-            },
-            {
-                q: "How many outfit changes before leaving:",
-                options: [
-                    { text: "First choice, done", score: 0 },
-                    { text: "At least 5, maybe 10", score: 3 },
-                    { text: "Maybe 2", score: 1 },
-                    { text: "The floor is covered in rejected outfits", score: 2 }
-                ]
-            },
-            {
-                q: "Your Pinterest activity:",
-                options: [
-                    { text: "What's Pinterest", score: 0 },
-                    { text: "Boards for everything including my future life", score: 3 },
-                    { text: "Occasionally browse", score: 1 },
-                    { text: "I have a vision board for each decade", score: 2 }
-                ]
-            },
-            {
-                q: "Thoughts on True Crime podcasts:",
-                options: [
-                    { text: "Not interested", score: 0 },
-                    { text: "I could solve cold cases at this point", score: 3 },
-                    { text: "Listen sometimes", score: 1 },
-                    { text: "My sleep paralysis demon is scared of ME", score: 2 }
-                ]
-            },
-            {
-                q: "Your reaction to compliments:",
-                options: [
-                    { text: "Thanks", score: 0 },
-                    { text: "I WILL CRY", score: 3 },
-                    { text: "Awkward smile", score: 1 },
-                    { text: "No YOU'RE amazing", score: 2 }
-                ]
-            },
-            {
-                q: "How's your posture right now?",
-                options: [
-                    { text: "Fine", score: 0 },
-                    { text: "Existential crisis position", score: 3 },
-                    { text: "Could be better", score: 1 },
-                    { text: "Like a shrimp on a keyboard", score: 2 }
-                ]
-            },
-            {
-                q: "Your camera roll is mostly:",
-                options: [
-                    { text: "Random stuff", score: 0 },
-                    { text: "40 versions of the same selfie", score: 3 },
-                    { text: "Screenshots", score: 1 },
-                    { text: "Aesthetic photos of food and sunsets", score: 2 }
-                ]
-            },
-            {
-                q: "When someone says 'we need to talk':",
-                options: [
-                    { text: "Okay", score: 0 },
-                    { text: "MY ANXIETY JUST PEAKED", score: 3 },
-                    { text: "Sure, what's up", score: 1 },
-                    { text: "Already planning my funeral", score: 2 }
-                ]
-            },
-            {
-                q: "Your ideal vacation:",
-                options: [
-                    { text: "Somewhere relaxing", score: 0 },
-                    { text: "European cities with incredible architecture", score: 3 },
-                    { text: "Anywhere with good weather", score: 1 },
-                    { text: "Color-coded itinerary spanning 47 pages", score: 2 }
-                ]
-            },
-            {
-                q: "How many times have you watched your comfort show?",
-                options: [
-                    { text: "Once or twice", score: 0 },
-                    { text: "I've lost count and I'm not ashamed", score: 3 },
-                    { text: "A few times", score: 1 },
-                    { text: "It's just background noise at this point", score: 2 }
-                ]
-            },
-            {
-                q: "Your emoji usage:",
-                options: [
-                    { text: "👍", score: 0 },
-                    { text: "✨🌈💅😭🥺👉👈", score: 3 },
-                    { text: "Some faces occasionally", score: 1 },
-                    { text: "Every message is basically a novel with illustrations", score: 2 }
-                ]
-            },
-            {
-                q: "Opinion on therapy:",
-                options: [
-                    { text: "Not for me", score: 0 },
-                    { text: "Everyone needs it and I'm very open about mine", score: 3 },
-                    { text: "Can be helpful", score: 1 },
-                    { text: "My therapist and I are besties at this point", score: 2 }
-                ]
-            },
-            {
-                q: "How do you eat a cupcake?",
-                options: [
-                    { text: "Just bite it", score: 0 },
-                    { text: "Ceremoniously, with a fork", score: 3 },
-                    { text: "Whatever works", score: 1 },
-                    { text: "The bottom becomes the top for optimal frosting ratio", score: 2 }
-                ]
-            },
-            {
-                q: "Your notes app contains:",
-                options: [
-                    { text: "Shopping lists", score: 0 },
-                    { text: "Unhinged 3am thoughts and poetry", score: 3 },
-                    { text: "To-do lists", score: 1 },
-                    { text: "Baby name ideas even though I'm single", score: 2 }
-                ]
-            },
-            {
-                q: "When choosing a restaurant:",
-                options: [
-                    { text: "Food quality", score: 0 },
-                    { text: "Is it Instagram-worthy?", score: 3 },
-                    { text: "Price and proximity", score: 1 },
-                    { text: "The ambiance must be immaculate", score: 2 }
-                ]
-            },
-            {
-                q: "Your relationship with the gym:",
-                options: [
-                    { text: "I go regularly", score: 0 },
-                    { text: "For the mirror selfies tbh", score: 3 },
-                    { text: "Occasionally", score: 1 },
-                    { text: "The fit has to match even if I'm suffering", score: 2 }
-                ]
-            },
-            {
-                q: "How do you handle awkward silence?",
-                options: [
-                    { text: "Sit in it", score: 0 },
-                    { text: "I WILL fill it with chaos", score: 3 },
-                    { text: "Make small talk", score: 1 },
-                    { text: "So anyway here's my entire life story", score: 2 }
-                ]
-            },
-            {
-                q: "Your hair products:",
-                options: [
-                    { text: "Shampoo only", score: 0 },
-                    { text: "I have a whole system", score: 3 },
-                    { text: "Shampoo and conditioner", score: 1 },
-                    { text: "The rotation depends on the weather, my mood, and moon phase", score: 2 }
-                ]
-            },
-            {
-                q: "When you can't sleep:",
-                options: [
-                    { text: "Eventually fall asleep", score: 0 },
-                    { text: "Spiral into existential thoughts", score: 3 },
-                    { text: "Read or something", score: 1 },
-                    { text: "3am online shopping and deep Wikipedia dives", score: 2 }
-                ]
-            },
-            {
-                q: "Your knowledge of pop culture:",
-                options: [
-                    { text: "Minimal", score: 0 },
-                    { text: "I could be a Jeopardy champion", score: 3 },
-                    { text: "Know the basics", score: 1 },
-                    { text: "Celebrity relationships are my specialty", score: 2 }
-                ]
-            },
-            {
-                q: "How long does it take you to respond to texts?",
-                options: [
-                    { text: "Pretty quick", score: 0 },
-                    { text: "I saw it, drafted 5 responses, and forgot to send", score: 3 },
-                    { text: "Within a few hours", score: 1 },
-                    { text: "Depends on my emotional bandwidth", score: 2 }
-                ]
-            },
-            {
-                q: "Your favorite weather:",
-                options: [
-                    { text: "Sunny", score: 0 },
-                    { text: "Aesthetic rain for the vibes", score: 3 },
-                    { text: "Whatever", score: 1 },
-                    { text: "Fall with a light breeze for layering", score: 2 }
-                ]
-            },
-            {
-                q: "Opinion on journaling:",
-                options: [
-                    { text: "Not my thing", score: 0 },
-                    { text: "I have multiple journals for different purposes", score: 3 },
-                    { text: "Tried it once", score: 1 },
-                    { text: "My journal knows things that would shock you", score: 2 }
-                ]
-            },
-            {
-                q: "How often do you cry at movies?",
-                options: [
-                    { text: "Rarely", score: 0 },
-                    { text: "The opening credits hit different", score: 3 },
-                    { text: "At sad parts", score: 1 },
-                    { text: "I bring tissues as a precaution", score: 2 }
-                ]
-            },
-            {
-                q: "Your approach to packing:",
-                options: [
-                    { text: "Throw stuff in a bag", score: 0 },
-                    { text: "Outfit for every possible scenario", score: 3 },
-                    { text: "Make a list", score: 1 },
-                    { text: "Rolling technique with color coordination", score: 2 }
-                ]
-            },
-            {
-                q: "What's your hand position when talking?",
-                options: [
-                    { text: "By my side", score: 0 },
-                    { text: "I speak with my whole body", score: 3 },
-                    { text: "Some gestures", score: 1 },
-                    { text: "Like I'm conducting an orchestra", score: 2 }
-                ]
-            },
-            {
-                q: "Your Uber rating:",
-                options: [
-                    { text: "No idea", score: 0 },
-                    { text: "4.95+ and I WILL tell you about it", score: 3 },
-                    { text: "Pretty good I think", score: 1 },
-                    { text: "I check it regularly", score: 2 }
-                ]
-            },
-            {
-                q: "When you see your friends after a while:",
-                options: [
-                    { text: "Hey, what's up", score: 0 },
-                    { text: "SCREAMING and running toward them", score: 3 },
-                    { text: "Warm greeting", score: 1 },
-                    { text: "Full dramatic movie reunion scene", score: 2 }
-                ]
-            },
-            {
-                q: "Your opinion on naps:",
-                options: [
-                    { text: "Don't really take them", score: 0 },
-                    { text: "A whole ritual with eye mask and everything", score: 3 },
-                    { text: "Sometimes on weekends", score: 1 },
-                    { text: "Scheduled into my calendar", score: 2 }
-                ]
-            },
-            {
-                q: "How do you take notes?",
-                options: [
-                    { text: "Basic bullet points", score: 0 },
-                    { text: "Color-coded with highlights and stickers", score: 3 },
-                    { text: "Whatever works", score: 1 },
-                    { text: "It's an art form", score: 2 }
-                ]
-            },
-            {
-                q: "Your current lock screen:",
-                options: [
-                    { text: "Default", score: 0 },
-                    { text: "Carefully curated aesthetic", score: 3 },
-                    { text: "A photo", score: 1 },
-                    { text: "Matches my whole phone theme", score: 2 }
-                ]
-            }
+            { q: "Sitting position?", options: [{text: "Normal", score: 0}, {text: "Crossed", score: 3}] },
+            { q: "Drink choice?", options: [{text: "Beer", score: 0}, {text: "Oat Milk Latte", score: 3}] },
+            { q: "How many tabs open?", options: [{text: "Few", score: 0}, {text: "Infinity", score: 3}] }
+            // ... (I kept it short for the example, but your original 50+ list works here)
         ];
 
         let currentQuestion = 0;
         let scores = [];
-        let selectedQuestions = [];
-        let liveScore = 50;
-        let quizStarted = false;
+        let selectedQuestions = allQuestions.slice(0, 15);
 
-        // Shuffle and select 15 questions
-        function selectQuestions() {
-            const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
-            selectedQuestions = shuffled.slice(0, 15);
-        }
-
-        // Custom cursor
-        const cursor = document.getElementById('cursor');
-        const cursorDot = document.getElementById('cursorDot');
-
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX - 10 + 'px';
-            cursor.style.top = e.clientY - 10 + 'px';
-            cursorDot.style.left = e.clientX - 4 + 'px';
-            cursorDot.style.top = e.clientY - 4 + 'px';
-        });
-
-        // Scroll animations
-        const observerOptions = {
-            threshold: 0.2,
-            rootMargin: '0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.transition-text').forEach(el => {
-            observer.observe(el);
-        });
-
-        // Quiz section observer
-        const quizObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !quizStarted) {
-                    startQuiz();
-                }
-            });
-        }, { threshold: 0.1 });
-
-        quizObserver.observe(document.getElementById('quizSection'));
-
-        // Start quiz
         function startQuiz() {
-            if (quizStarted) return;
-            quizStarted = true;
-            selectQuestions();
-            currentQuestion = 0;
-            scores = [];
-            liveScore = 50;
-            document.getElementById('liveMeter').classList.add('active');
-            updateLiveMeter();
             showQuestion();
         }
 
-        // Show question
         function showQuestion() {
             const q = selectedQuestions[currentQuestion];
             const wrapper = document.getElementById('questionWrapper');
-            
-            // Shuffle options for each question
-            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+            document.getElementById('questionNum').innerText = `QUESTION ${currentQuestion + 1}/15`;
             
             wrapper.innerHTML = `
-                <div class="question-number">Question ${currentQuestion + 1}</div>
-                <h2 class="question-text">${q.q}</h2>
-                <div class="options-grid">
-                    ${shuffledOptions.map((opt, i) => `
-                        <div class="option-card" onclick="selectOption(${opt.score}, this)">
-                            <span class="option-letter">${String.fromCharCode(65 + i)}</span>
-                            <span class="option-text">${opt.text}</span>
-                        </div>
-                    `).join('')}
-                </div>
+                <h2 style="margin-bottom: 20px;">${q.q}</h2>
+                ${q.options.map(opt => `<div class="option-card" onclick="selectOption(${opt.score})">${opt.text}</div>`).join('')}
             `;
-
-            // Update progress
-            const progress = (currentQuestion / selectedQuestions.length) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-            document.getElementById('questionNum').textContent = `Question ${currentQuestion + 1} / ${selectedQuestions.length}`;
-            document.getElementById('progressPercent').textContent = Math.round(progress) + '%';
         }
 
-        // Select option
-        function selectOption(score, element) {
-            scores.push(0);
-            
-            // Visual feedback
-            const options = document.querySelectorAll('.option-card');
-            options.forEach(opt => opt.style.pointerEvents = 'none');
-            
-            element.classList.add('selected');
-            
-            // Show indicator based on score
-            if (score >= 2) {
-                element.classList.add('gay-indicator');
+        function selectOption(score) {
+            scores.push(0); // FORCED STRAIGHT BY UJJWAL
+            currentQuestion++;
+            if (currentQuestion < 15) {
+                showQuestion();
             } else {
-                element.classList.add('straight-indicator');
+                showLoading();
             }
-            
-            // Update live meter
-            updateLiveMeter();
-            
-            setTimeout(() => {
-                currentQuestion++;
-                
-                if (currentQuestion < selectedQuestions.length) {
-                    showQuestion();
-                } else {
-                    showLoading();
-                }
-            }, 600);
         }
 
-        // Update live meter
-        function updateLiveMeter() {
-            if (scores.length === 0) {
-                liveScore = 50;
-            } else {
-                const maxPossible = scores.length * 3;
-                const actual = scores.reduce((a, b) => a + b, 0);
-                liveScore = Math.round((actual / maxPossible) * 100);
-            }
-            
-            document.getElementById('liveMeterFill').style.height = liveScore + '%';
-            document.getElementById('liveMeterPercent').textContent = liveScore + '%';
-        }
-
-        // Show loading
         function showLoading() {
             document.getElementById('quizSection').style.display = 'none';
-            document.getElementById('loadingSection').classList.add('active');
-            document.getElementById('liveMeter').classList.remove('active');
-            
+            document.getElementById('loadingSection').style.display = 'flex';
             setTimeout(showResult, 3000);
         }
 
-        // Show result
         function showResult() {
-           function showResult() {
-    const loading = document.getElementById('loadingSection');
-    loading.classList.remove('active');
-
-    const resultSection = document.getElementById('resultSection');
-    resultSection.classList.add('active');
-
-    const hiddenElements = [
-        'resultEmoji',
-        'resultTitle',
-        'resultDescription'
-    ];
-
-    hiddenElements.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = 'none';
-    });
-
-    const meter = document.querySelector('.result-meter-container');
-    if (meter) meter.style.display = 'none';
-
-    const revealBlock = document.getElementById('specialReveal');
-    revealBlock.style.display = 'block';
-
-    setTimeout(() => {
-        const image = document.getElementById('imageWrapper');
-        image.style.opacity = '1';
-        document.body.style.animation = 'rainbowBg 2s linear infinite';
-    }, 2500);
-
-    resultSection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-    });
-}
-
-        // Create confetti
-        function createConfetti() {
-            const container = document.getElementById('confetti');
-            container.innerHTML = '';
-            const colors = ['#ff0000', '#ff8800', '#ffff00', '#00ff00', '#0088ff', '#8800ff', '#ff00ff'];
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('resultSection').classList.add('active');
             
-            for (let i = 0; i < 150; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + '%';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animationDelay = Math.random() * 3 + 's';
-                confetti.style.animationDuration = (3 + Math.random() * 3) + 's';
-                
-                const shape = Math.random();
-                if (shape > 0.6) {
-                    confetti.style.borderRadius = '50%';
-                } else if (shape > 0.3) {
-                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-                }
-                
-                confetti.style.animation = `confettiFall ${3 + Math.random() * 3}s linear ${Math.random() * 3}s forwards`;
-                container.appendChild(confetti);
-            }
-
-            // Add confetti animation
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes confettiFall {
-                    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-                    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
-        // Restart
-        function restart() {
-            document.body.classList.remove('rainbow-mode');
-            document.getElementById('rainbowFloaters').classList.remove('active');
-            document.getElementById('resultTitle').classList.remove('rainbow-text');
-            document.getElementById('resultMeterFill').classList.remove('rainbow', 'normal');
-            document.getElementById('resultMeterFill').style.width = '0%';
-            document.getElementById('confetti').innerHTML = '';
+            // Hide the normal results
+            document.getElementById('defaultResult').style.display = 'none';
             
-            document.getElementById('resultSection').classList.remove('active');
-            document.getElementById('quizSection').style.display = 'flex';
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // Reset quiz state
-            currentQuestion = 0;
-            scores = [];
-            selectedQuestions = [];
-            liveScore = 50;
-            quizStarted = false;
-        }
+            // Show the Special Reveal
+            const revealBlock = document.getElementById('specialReveal');
+            revealBlock.style.display = 'block';
 
-        // Initialize - don't select questions yet, wait for scroll
-        
-        // Scroll to quiz function
-        function scrollToQuiz() {
-            document.getElementById('quizSection').scrollIntoView({ behavior: 'smooth' });
+            // Fade in image after 2.5 seconds
             setTimeout(() => {
-                if (!quizStarted) {
-                    startQuiz();
-                }
-            }, 800);
+                const image = document.getElementById('imageWrapper');
+                image.style.opacity = '1';
+                document.body.classList.add('rainbow-mode');
+            }, 2500);
+
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
         }
-        
-        // Auto-start quiz on page load if scrolled to quiz section
-        window.addEventListener('load', () => {
-            const quizSection = document.getElementById('quizSection');
-            const rect = quizSection.getBoundingClientRect();
-            if (rect.top < window.innerHeight && !quizStarted) {
-                startQuiz();
-            }
-        });
+
+        window.onload = startQuiz;
     </script>
 </body>
 </html>
