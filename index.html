@@ -4,200 +4,206 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARE YOU GAY?</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@100;200;300;400;500;600;700;800;900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* Pulse Animation for the reveal */
         @keyframes pulse {
             0% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(1.1); filter: brightness(1.5); text-shadow: 0 0 20px #00ff80; }
+            50% { transform: scale(1.05); filter: brightness(1.3); text-shadow: 0 0 20px #00ff80; }
             100% { transform: scale(1); filter: brightness(1); }
+        }
+
+        @keyframes rainbowBg {
+            0% { background: #ff0000; }
+            20% { background: #ffff00; }
+            40% { background: #00ff00; }
+            60% { background: #0088ff; }
+            80% { background: #8800ff; }
+            100% { background: #ff0000; }
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        :root {
-            --black: #000000;
-            --white: #ffffff;
-            --gray: #333333;
-        }
-
-        html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--black);
-            color: var(--white);
+            background: #000;
+            color: #fff;
             overflow-x: hidden;
-            cursor: default;
+            text-align: center;
+            transition: background 1s ease;
         }
 
-        body.rainbow-mode {
-            animation: rainbowBg 10s linear infinite;
+        .rainbow-active {
+            animation: rainbowBg 5s linear infinite !important;
         }
 
-        @keyframes rainbowBg {
-            0% { background: linear-gradient(135deg, #ff0000 0%, #000 50%, #000 100%); }
-            20% { background: linear-gradient(135deg, #ffff00 0%, #000 50%, #000 100%); }
-            40% { background: linear-gradient(135deg, #00ff00 0%, #000 50%, #000 100%); }
-            60% { background: linear-gradient(135deg, #0088ff 0%, #000 50%, #000 100%); }
-            80% { background: linear-gradient(135deg, #8800ff 0%, #000 50%, #000 100%); }
-            100% { background: linear-gradient(135deg, #ff0000 0%, #000 50%, #000 100%); }
-        }
-
-        /* Hero and Quiz layout */
-        .hero, .quiz-section, .result-section, .loading-section {
-            height: 100vh;
+        section {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
-        .hero-title { font-family: 'Outfit'; font-size: clamp(4rem, 15vw, 10rem); font-weight: 900; }
-        .rainbow-word {
+        .hero-title { font-family: 'Outfit'; font-size: clamp(3rem, 15vw, 8rem); font-weight: 900; line-height: 1; }
+        
+        .rainbow-text {
             background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #0088ff, #ff00ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-size: 200% 100%;
-            animation: rainbowFlow 2s linear infinite;
+            animation: flow 2s linear infinite;
         }
 
-        @keyframes rainbowFlow { to { background-position: 200% 50%; } }
+        @keyframes flow { to { background-position: 200% 50%; } }
 
-        /* Quiz UI */
-        .quiz-container { max-width: 800px; width: 100%; }
+        /* Quiz Styling */
+        .quiz-container { max-width: 600px; width: 100%; }
         .option-card {
-            padding: 20px; margin: 10px 0;
+            padding: 20px; margin: 15px 0;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
+            border-radius: 15px;
             cursor: pointer;
-            transition: 0.3s;
+            font-size: 1.2rem;
+            transition: 0.3s cubic-bezier(0.19, 1, 0.22, 1);
         }
-        .option-card:hover { transform: translateX(10px); background: rgba(255,255,255,0.15); }
-        .selected { border-color: white; background: rgba(255,255,255,0.2); }
+        .option-card:hover { transform: scale(1.05); background: rgba(255,255,255,0.1); border-color: #fff; }
 
-        /* Results */
-        .result-section { display: none; }
-        .result-section.active { display: flex; }
-        .loading-section.active { display: flex; }
+        /* Results Reveal */
+        #resultSection { display: none; }
+        #resultSection.active { display: flex; }
         
-        /* Meter */
-        .result-meter-bar { width: 300px; height: 10px; background: #333; border-radius: 5px; margin: 20px 0; overflow: hidden; }
-        .result-meter-fill { height: 100%; width: 0%; background: #fff; transition: width 2s; }
-
-        .restart-btn {
-            margin-top: 30px; padding: 15px 40px;
-            background: white; color: black; border: none;
-            font-weight: bold; cursor: pointer; text-transform: uppercase;
+        #congratsText {
+            font-family: 'Outfit';
+            font-size: clamp(2rem, 8vw, 4rem);
+            animation: pulse 1s infinite;
+            background: linear-gradient(90deg, #00ff80, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
         }
+
+        .final-pic {
+            width: 300px;
+            max-width: 80vw;
+            border-radius: 25px;
+            border: 5px solid #00ff80;
+            box-shadow: 0 0 50px rgba(0,255,128,0.6);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1.5s ease-out;
+        }
+
+        .show-pic { opacity: 1; transform: translateY(0); }
+
+        .loading-ring {
+            width: 60px; height: 60px;
+            border: 5px solid #333;
+            border-top: 5px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <section class="hero" id="hero">
-        <h1 class="hero-title">ARE YOU <span class="rainbow-word">GAY?</span></h1>
-        <p style="margin-top: 20px; opacity: 0.5;">Scroll down to begin</p>
+    <section id="hero">
+        <h1 class="hero-title">ARE YOU <br><span class="rainbow-text">GAY?</span></h1>
+        <p style="margin-top: 30px; opacity: 0.4; letter-spacing: 2px;">SCROLL TO DISCOVER THE TRUTH</p>
     </section>
 
-    <section class="quiz-section" id="quizSection">
+    <section id="quizSection">
         <div class="quiz-container">
-            <h2 id="questionNum" style="font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 10px;">QUESTION 1/15</h2>
-            <div id="questionWrapper"></div>
+            <p id="qCount" style="color: #666; margin-bottom: 10px;">QUESTION 1 OF 15</p>
+            <h2 id="qText" style="font-size: 2rem; margin-bottom: 30px;">Loading...</h2>
+            <div id="optionsWrapper"></div>
         </div>
     </section>
 
-    <section class="loading-section" id="loadingSection" style="display:none;">
-        <h2 class="rainbow-word">ANALYZING...</h2>
+    <section id="loadingSection" style="display:none;">
+        <div class="loading-ring"></div>
+        <h2 class="rainbow-text">CALCULATING RAINBOW ENERGY...</h2>
     </section>
 
-    <section class="result-section" id="resultSection">
-        <div id="defaultResult">
-            <div id="resultEmoji" style="font-size: 5rem;">🏳️‍🌈</div>
-            <h1 id="resultTitle" class="result-title">YOU'RE GAY</h1>
-            <p id="resultDescription">Calculated energy level detected.</p>
-            <div class="result-meter-bar"><div class="result-meter-fill" id="resultMeterFill"></div></div>
+    <section id="resultSection">
+        <div id="specialReveal">
+            <h1 id="congratsText">CONGRATS! <br> YOU WON A NIGHT WITH ME</h1>
+            
+            <img src="owner_pic.jpgc" id="finalBoss" class="final-pic">
+            
+            <p style="margin-top: 20px; font-weight: bold; color: #00ff80; letter-spacing: 3px;">THE GRAND PRIZE 🫡</p>
         </div>
-
-        <div id="specialReveal" style="display:none;">
-            <h1 id="congratsText" style="font-family: 'Outfit'; font-size: 3rem; animation: pulse 1s infinite; background: linear-gradient(90deg, #00ff80, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                CONGRATS! YOU WON A NIGHT WITH ME
-            </h1>
-            <div id="imageWrapper" style="opacity: 0; transition: opacity 1.5s ease-in; margin-top: 20px;">
-                <img src="owner_pic.jpg" style="width: 300px; border-radius: 20px; border: 4px solid #00ff80; box-shadow: 0 0 50px rgba(0,255,128,0.5);">
-                <p style="margin-top: 10px; color: #00ff80; font-weight: bold; letter-spacing: 2px;">THE GRAND PRIZE 🫡</p>
-            </div>
-        </div>
-
-        <button class="restart-btn" onclick="location.reload()">Take Again</button>
+        <button onclick="location.reload()" style="margin-top: 40px; background: none; border: 1px solid #333; color: #666; padding: 10px 20px; cursor: pointer;">RESTART TEST</button>
     </section>
 
     <script>
-        const allQuestions = [
-            { q: "Sitting position?", options: [{text: "Normal", score: 0}, {text: "Crossed", score: 3}] },
-            { q: "Drink choice?", options: [{text: "Beer", score: 0}, {text: "Oat Milk Latte", score: 3}] },
-            { q: "How many tabs open?", options: [{text: "Few", score: 0}, {text: "Infinity", score: 3}] }
-            // ... (I kept it short for the example, but your original 50+ list works here)
+        const questions = [
+            { q: "How do you sit on a chair?", a: ["Feet flat on floor", "Legs crossed over each other", "One leg tucked under", "Like a pretzel"] },
+            { q: "Pick your morning fuel:", a: ["Black Coffee", "Oat Milk Iced Latte", "Energy Drink", "Water"] },
+            { q: "What's your reaction to drama?", a: ["Avoid it", "I am the source", "Popcorn and watch", "Spill the tea"] },
+            { q: "How many Spotify playlists?", a: ["Just one", "50+ organized by vibe", "I use their Daily Mix", "I listen to radio"] },
+            { q: "Pick a vacation spot:", a: ["Mountains", "European City Tour", "Beach", "Staycation"] }
         ];
 
-        let currentQuestion = 0;
-        let scores = [];
-        let selectedQuestions = allQuestions.slice(0, 15);
+        let currentIdx = 0;
+        let userScores = [];
 
-        function startQuiz() {
-            showQuestion();
-        }
-
-        function showQuestion() {
-            const q = selectedQuestions[currentQuestion];
-            const wrapper = document.getElementById('questionWrapper');
-            document.getElementById('questionNum').innerText = `QUESTION ${currentQuestion + 1}/15`;
+        function renderQuestion() {
+            // Cycle through questions or repeat if 15 haven't passed
+            const qData = questions[currentIdx % questions.length];
+            document.getElementById('qCount').innerText = `QUESTION ${currentIdx + 1} OF 15`;
+            document.getElementById('qText').innerText = qData.q;
             
-            wrapper.innerHTML = `
-                <h2 style="margin-bottom: 20px;">${q.q}</h2>
-                ${q.options.map(opt => `<div class="option-card" onclick="selectOption(${opt.score})">${opt.text}</div>`).join('')}
-            `;
+            const wrapper = document.getElementById('optionsWrapper');
+            wrapper.innerHTML = '';
+            
+            qData.a.forEach(opt => {
+                const div = document.createElement('div');
+                div.className = 'option-card';
+                div.innerText = opt;
+                div.onclick = () => handleSelect();
+                wrapper.appendChild(div);
+            });
         }
 
-        function selectOption(score) {
-            scores.push(0); // FORCED STRAIGHT BY UJJWAL
-            currentQuestion++;
-            if (currentQuestion < 15) {
-                showQuestion();
+        function handleSelect() {
+            userScores.push(0); // FORCE 0% SCORE
+            currentIdx++;
+            
+            if (currentIdx < 15) {
+                renderQuestion();
             } else {
-                showLoading();
+                startAnalysis();
             }
         }
 
-        function showLoading() {
+        function startAnalysis() {
             document.getElementById('quizSection').style.display = 'none';
             document.getElementById('loadingSection').style.display = 'flex';
-            setTimeout(showResult, 3000);
-        }
-
-        function showResult() {
-            document.getElementById('loadingSection').style.display = 'none';
-            document.getElementById('resultSection').classList.add('active');
             
-            // Hide the normal results
-            document.getElementById('defaultResult').style.display = 'none';
-            
-            // Show the Special Reveal
-            const revealBlock = document.getElementById('specialReveal');
-            revealBlock.style.display = 'block';
-
-            // Fade in image after 2.5 seconds
             setTimeout(() => {
-                const image = document.getElementById('imageWrapper');
-                image.style.opacity = '1';
-                document.body.classList.add('rainbow-mode');
-            }, 2500);
-
-            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('loadingSection').style.display = 'none';
+                showFinalResult();
+            }, 3000);
         }
 
-        window.onload = startQuiz;
+        function showFinalResult() {
+            const res = document.getElementById('resultSection');
+            res.classList.add('active');
+            res.scrollIntoView({ behavior: 'smooth' });
+
+            setTimeout(() => {
+                document.getElementById('finalBoss').classList.add('show-pic');
+                document.body.classList.add('rainbow-active');
+            }, 2500);
+        }
+
+        // Initialize
+        renderQuestion();
     </script>
 </body>
 </html>
