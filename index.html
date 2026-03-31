@@ -1329,6 +1329,7 @@
         let scores = [];
         let selectedQuestions = [];
         let liveScore = 50;
+        let quizStarted = false;
 
         // Shuffle and select 15 questions
         function selectQuestions() {
@@ -1368,7 +1369,7 @@
         // Quiz section observer
         const quizObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting && selectedQuestions.length === 0) {
+                if (entry.isIntersecting && !quizStarted) {
                     startQuiz();
                 }
             });
@@ -1378,6 +1379,8 @@
 
         // Start quiz
         function startQuiz() {
+            if (quizStarted) return;
+            quizStarted = true;
             selectQuestions();
             currentQuestion = 0;
             scores = [];
@@ -1571,19 +1574,16 @@
             scores = [];
             selectedQuestions = [];
             liveScore = 50;
-            
-            // Start fresh quiz when user scrolls back down
-            document.getElementById('quizContainer').classList.remove('visible');
+            quizStarted = false;
         }
 
-        // Initialize
-        selectQuestions();
+        // Initialize - don't select questions yet, wait for scroll
         
         // Scroll to quiz function
         function scrollToQuiz() {
             document.getElementById('quizSection').scrollIntoView({ behavior: 'smooth' });
             setTimeout(() => {
-                if (selectedQuestions.length === 0 || currentQuestion === 0) {
+                if (!quizStarted) {
                     startQuiz();
                 }
             }, 800);
@@ -1593,7 +1593,7 @@
         window.addEventListener('load', () => {
             const quizSection = document.getElementById('quizSection');
             const rect = quizSection.getBoundingClientRect();
-            if (rect.top < window.innerHeight) {
+            if (rect.top < window.innerHeight && !quizStarted) {
                 startQuiz();
             }
         });
