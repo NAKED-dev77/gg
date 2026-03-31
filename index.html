@@ -1,141 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARE YOU GAY?</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Outfit:wght@900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --black: #000000; --white: #ffffff; --accent: #00ff80; }
-        body { font-family: 'Inter', sans-serif; background: var(--black); color: var(--white); overflow-x: hidden; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARE YOU GAY?</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Outfit:wght@900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--black:#000000;--white:#ffffff;--green:#00ff80;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;cursor:none;}
 
-        .noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); }
-        .cursor { width: 20px; height: 20px; border: 2px solid white; border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; transition: transform 0.1s; }
+#cursor{position:fixed;width:20px;height:20px;border:2px solid var(--green);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s ease;mix-blend-mode:difference;}
+#cursor-dot{position:fixed;width:5px;height:5px;background:var(--green);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
 
-        /* Sections */
-        section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .hero-title { font-family: 'Outfit'; font-size: clamp(4rem, 15vw, 10rem); font-weight: 900; line-height: 0.9; }
-        .rainbow-word { background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #0088ff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% 100%; animation: flow 2s linear infinite; }
-        @keyframes flow { to { background-position: 200% 50%; } }
+.noise{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1000;opacity:0.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");}
 
-        /* Live Meter */
-        .live-meter { position: fixed; top: 50%; right: 30px; transform: translateY(-50%); width: 8px; height: 300px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; display: none; }
-        .live-meter.active { display: block; }
-        .live-meter-fill { position: absolute; bottom: 0; width: 100%; background: linear-gradient(to top, #ff0080, #00ff80); transition: height 0.5s ease; }
+#liveMeter{position:fixed;top:50%;right:30px;transform:translateY(-50%);width:10px;height:300px;background:rgba(255,255,255,0.08);border-radius:10px;overflow:hidden;display:none;z-index:500;}
+#liveMeter.active{display:block;}
+#meterLabel{position:fixed;top:50%;right:48px;transform:translateY(-50%);font-size:11px;color:rgba(255,255,255,0.3);writing-mode:vertical-rl;text-transform:uppercase;letter-spacing:2px;}
+#meterFill{position:absolute;bottom:0;width:100%;height:0%;background:var(--green);transition:height 0.6s ease;border-radius:10px;box-shadow:0 0 15px var(--green);}
 
-        /* Quiz UI */
-        .quiz-container { max-width: 800px; width: 100%; padding: 20px; }
-        .option-card { padding: 25px; margin: 15px 0; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; cursor: pointer; transition: 0.3s cubic-bezier(0.19, 1, 0.22, 1); }
-        .option-card:hover { background: rgba(255,255,255,0.1); transform: translateX(10px); border-color: var(--accent); }
+section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px 20px;}
 
-        /* Reveal Section */
-        #resultSection { display: none; min-height: 250vh; flex-direction: column; justify-content: flex-start; padding-top: 150px; }
-        #congratsText { font-family: 'Outfit'; font-size: clamp(2rem, 8vw, 5rem); animation: pulse 1.5s infinite; color: var(--accent); margin-bottom: 80vh; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.7; } }
-        
-        .final-pic { width: 350px; max-width: 85vw; border-radius: 20px; border: 5px solid var(--accent); box-shadow: 0 0 50px rgba(0,255,128,0.4); margin-bottom: 30px; }
-        
-        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-20px);} }
-        .scroll-arrow { font-size: 2rem; color: var(--accent); animation: bounce 2s infinite; }
-    </style>
+.hero-title{font-family:'Outfit',sans-serif;font-size:clamp(4rem,15vw,10rem);font-weight:900;line-height:0.9;}
+.rainbow-word{background:linear-gradient(90deg,#ff0000,#ff8800,#ffff00,#00ff00,#0088ff,#ff00ff,#ff0000);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;background-size:300% 100%;animation:flow 2s linear infinite;}
+@keyframes flow{to{background-position:300% 50%;}}
+
+.option-card{padding:18px 24px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:4px;cursor:none;transition:all 0.25s;font-size:1.1rem;text-align:left;position:relative;overflow:hidden;width:500px;max-width:90%;margin:10px 0;}
+.option-card:hover{background:rgba(255,255,255,0.06);border-color:var(--white);transform:translateX(10px);}
+.option-card.selected{background:var(--white);color:var(--black);font-weight:bold;}
+
+#result-view{display:none;min-height:220vh;flex-direction:column;align-items:center;}
+.congrats-title{font-family:'Outfit',sans-serif;font-size:clamp(1.8rem,6vw,4rem);font-weight:900;color:var(--green);animation:pulse 2s ease-in-out infinite;margin-bottom:80vh;}
+@keyframes pulse{0%,100%{text-shadow:0 0 20px rgba(0,255,128,0.4);}50%{text-shadow:0 0 60px rgba(0,255,128,0.9); transform:scale(1.05);}}
+
+.owner-img{width:min(350px,80vw);height:auto;border-radius:12px;border:4px solid var(--green);box-shadow:0 0 40px rgba(0,255,128,0.5);margin:0 auto;}
+.scroll-arrow{width:30px;height:30px;border-right:3px solid var(--green);border-bottom:3px solid var(--green);transform:rotate(45deg);animation:bounce 1.5s infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0) rotate(45deg);}50%{transform:translateY(15px) rotate(45deg);}}
+</style>
 </head>
 <body>
-    <div class="noise"></div>
-    <div class="cursor" id="cursor"></div>
 
-    <div class="live-meter" id="liveMeter">
-        <div class="live-meter-fill" id="meterFill" style="height: 50%"></div>
+<div id="cursor"></div>
+<div id="cursor-dot"></div>
+<div class="noise"></div>
+<div id="liveMeter"><div id="meterFill"></div></div>
+<div id="meterLabel">GAYDAR</div>
+
+<div id="quiz-view">
+  <section id="hero-section" style="min-height:150vh;justify-content:flex-start;padding-top:25vh;">
+    <h1 class="hero-title">ARE YOU<br><span class="rainbow-word">GAY?</span></h1>
+    <p style="margin-top:30px; opacity:0.3; letter-spacing:5px; text-transform:uppercase;">Scroll to start Analysis</p>
+    <div class="scroll-arrow" style="margin-top:10vh;"></div>
+  </section>
+
+  <section id="quiz-section" style="display:none;">
+    <div class="quiz-container">
+      <p id="qCounter" style="font-size:0.8rem;letter-spacing:3px;opacity:0.3;margin-bottom:20px;">QUESTION 1 OF 15</p>
+      <h2 id="qText" style="font-family:'Space Grotesk',sans-serif;font-size:2.2rem;margin-bottom:40px;"></h2>
+      <div id="optionsGrid"></div>
     </div>
+  </section>
+</div>
 
-    <div id="main-view">
-        <section id="hero">
-            <h1 class="hero-title">ARE YOU <br><span class="rainbow-word">GAY?</span></h1>
-            <p style="margin-top: 40px; opacity: 0.4; letter-spacing: 5px;">SCROLL TO START</p>
-        </section>
+<section id="result-view">
+  <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+    <h1 class="congrats-title">CONGRATS! YOU WON<br>A NIGHT WITH ME.</h1>
+    <p style="opacity:0.4; letter-spacing:2px;">KEEP SCROLLING TO CLAIM</p>
+    <div class="scroll-arrow" style="margin-top:30px;"></div>
+  </div>
+  
+  <div style="min-height:100vh;padding-top:20vh;">
+    <img id="ownerImg" src="owner_pic.jpeg" alt="Ujjwal" class="owner-img" onerror="this.style.display='none'; document.getElementById('fallback').style.display='block';">
+    <div id="fallback" style="display:none; color:var(--green); border:2px dashed var(--green); padding:50px; border-radius:10px;">[owner_pic.jpeg not found]</div>
+    <h2 style="margin-top:40px; font-family:'Outfit'; font-size:2.5rem;">100% GAYNESS DETECTED.</h2>
+    <p style="margin-top:10px; color:var(--green); font-weight:bold; letter-spacing:2px;">SYSTEM OVERWRITTEN BY UJJWAL.</p>
+    <button onclick="location.reload()" style="margin-top:50px; padding:15px 30px; background:transparent; border:1px solid #444; color:#666; cursor:none;">RETRY</button>
+  </div>
+</section>
 
-        <section id="quiz-section">
-            <div class="quiz-container">
-                <p id="qProgress" style="color: #666; margin-bottom: 10px;">QUESTION 1 / 15</p>
-                <h2 id="qText" style="font-size: 2.2rem; margin-bottom: 40px; font-family: 'Space Grotesk';">Loading...</h2>
-                <div id="optionsGrid"></div>
-            </div>
-        </section>
-    </div>
+<script>
+/* [SYSTEM ADMINISTRATOR OVERRIDE: KERNEL EXECUTING] */
+const cur = document.getElementById('cursor');
+const dot = document.getElementById('cursor-dot');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function anim(){cx+=(mx-cx)*0.15;cy+=(my-cy)*0.15;cur.style.left=cx+'px';cur.style.top=cy+'px';requestAnimationFrame(anim);})();
 
-    <section id="resultSection">
-        <h1 id="congratsText">CONGRATS! <br> YOU WON A NIGHT WITH ME</h1>
-        <p style="color: var(--accent); letter-spacing: 4px;">KEEP SCROLLING TO CLAIM</p>
-        <div class="scroll-arrow">↓</div>
-        
-        <div style="margin-top: 50vh;">
-            <img src="owner_pic.jpeg" class="final-pic" onerror="this.src='https://via.placeholder.com/350?text=File+Missing:+owner_pic.jpeg'">
-            <h2 style="font-family: 'Outfit'; font-size: 2.5rem; color: var(--accent);">THE GRAND PRIZE 🫡</h2>
-            <p style="opacity: 0.5; margin-top: 15px;">0% Gayness Detected. System Overwritten by Ujjwal.</p>
-            <button onclick="location.reload()" style="margin-top: 50px; background: white; color: black; border: none; padding: 15px 40px; font-weight: bold; cursor: pointer; border-radius: 5px;">RETRY</button>
-        </div>
-    </section>
+const BANK = [
+  {q:"How do you sit on a chair?",o:["Normal","One leg crossed","Tucked under","Pretzel"]},
+  {q:"Spotify habits?",o:["I hit shuffle","Playlists for everything","Order only","YouTube only"]},
+  {q:"Iced coffee?",o:["Always","Summer only","Never","What is that?"]},
+  {q:"Skincare?",o:["Water","3-Step","10-Step","Expert level"]},
+  {q:"Drama reaction?",o:["Avoid","I am the drama","Observe","Popcorn"]}
+];
 
-    <script>
-        // CURSOR LOGIC
-        document.addEventListener('mousemove', e => {
-            const cursor = document.getElementById('cursor');
-            cursor.style.left = e.clientX - 10 + 'px';
-            cursor.style.top = e.clientY - 10 + 'px';
-        });
+let currentQ = 0;
+const TOTAL = 15;
+let started = false;
 
-        // ORIGINAL QUESTION REPLICA
-        const questions = [
-            { q: "Sitting position right now?", o: ["Normal", "Legs crossed", "Tucked under", "Pretzel"] },
-            { q: "Reaction to a dog on the street?", o: ["Cool", "MUST PET", "Appreciate afar", "Say hi"] },
-            { q: "Spotify playlists count?", o: ["Like 3", "50+ vibes", "Shuffle only", "Organized"] },
-            { q: "Opinion on IKEA trips?", o: ["Evil", "Love it", "Meatballs", "List ready"] }
-        ];
+window.addEventListener('scroll',()=>{
+  if(!started && window.scrollY > 300){
+    started = true;
+    document.getElementById('hero-section').style.display='none';
+    document.getElementById('quiz-section').style.display='flex';
+    document.getElementById('liveMeter').classList.add('active');
+    window.scrollTo(0,0);
+    loadQ();
+  }
+});
 
-        let step = 0;
-        const total = 15;
+function loadQ(){
+  const data = BANK[currentQ % BANK.length];
+  document.getElementById('qCounter').textContent = `Question ${currentQ+1} of ${TOTAL}`;
+  document.getElementById('qText').textContent = data.q;
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML='';
+  data.o.forEach((opt,i)=>{
+    const div=document.createElement('div');
+    div.className='option-card';
+    div.innerText = opt;
+    div.onclick = () =>{
+      div.classList.add('selected');
+      setTimeout(handle, 280);
+    };
+    grid.appendChild(div);
+  });
+}
 
-        function loadQ() {
-            const data = questions[step % questions.length];
-            document.getElementById('qProgress').innerText = `QUESTION ${step + 1} / ${total}`;
-            document.getElementById('qText').innerText = data.q;
-            
-            const grid = document.getElementById('optionsGrid');
-            grid.innerHTML = '';
-            
-            data.o.forEach(opt => {
-                const card = document.createElement('div');
-                card.className = 'option-card';
-                card.innerText = opt;
-                card.onclick = () => {
-                    // FORCE THE LIVE METER TO STAY AT 0% FOR THE TROLL
-                    document.getElementById('meterFill').style.height = '0%';
-                    next();
-                };
-                grid.appendChild(card);
-            });
-        }
+function handle(){
+  currentQ++;
+  document.getElementById('meterFill').style.height = (currentQ/TOTAL*100)+'%';
+  if(currentQ<TOTAL) loadQ();
+  else finish();
+}
 
-        function next() {
-            step++;
-            if (step < total) {
-                loadQ();
-                if (step === 1) document.getElementById('liveMeter').classList.add('active');
-            } else {
-                showResult();
-            }
-        }
-
-        function showResult() {
-            document.getElementById('main-view').remove();
-            document.getElementById('liveMeter').remove();
-            const res = document.getElementById('resultSection');
-            res.style.display = 'flex';
-            window.scrollTo(0, 0);
-        }
-
-        loadQ();
-    </script>
+function finish(){
+  document.getElementById('quiz-view').remove();
+  document.getElementById('liveMeter').remove();
+  document.getElementById('result-view').style.display='block';
+  window.scrollTo(0,0);
+}
+</script>
 </body>
 </html>
